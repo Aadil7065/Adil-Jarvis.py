@@ -52,6 +52,14 @@ jobs:
         with:
           gradle-version: '8.10.2'
 
+      - name: Configure Android SDK and licenses
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+          mkdir -p "$ANDROID_HOME/licenses" 2>/dev/null || true
+          printf "24333f8a63b6825ea9c5514f83c2829b004d1fee\nd56f5187479451eabf01fb78af6dfcb131a6481e\n" > "$ANDROID_HOME/licenses/android-sdk-license" 2>/dev/null || true
+          printf "84831b9409646a53fe4430a17520b7250e64f014\n" > "$ANDROID_HOME/licenses/android-sdk-preview-license" 2>/dev/null || true
+          yes | sdkmanager --licenses 2>/dev/null || true
+
       - name: Create temporary debug keystore
         run: |
           if [ ! -f "./debug.keystore" ]; then
