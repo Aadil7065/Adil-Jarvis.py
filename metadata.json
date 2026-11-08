@@ -1,0 +1,6 @@
+{
+  "name": "JARVIS Core Assistant",
+  "description": "An advanced, animated AI assistant dashboard with voice interaction, code generation, APK compilation studio, Android device controls, and manual API configuration.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
