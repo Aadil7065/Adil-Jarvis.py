@@ -73,11 +73,20 @@ jobs:
             echo "Error: Failed to create ./debug.keystore"
             exit 1
           fi
+          mkdir -p ~/.android
+          cp -f ./debug.keystore ~/.android/debug.keystore
           echo "Temporary debug keystore ready."
 
       - name: Build Debug APK
         run: |
-          gradle :app:assembleDebug --stacktrace --no-daemon
+          if [ -f "./gradlew" ]; then
+            echo "Using Gradle wrapper ./gradlew"
+            chmod +x ./gradlew
+            ./gradlew :app:assembleDebug --stacktrace --no-daemon
+          else
+            echo "Using installed Gradle CLI"
+            gradle :app:assembleDebug --stacktrace --no-daemon
+          fi
 
       - name: Verify APK
         run: |
@@ -134,11 +143,7 @@ jobs:
             --title "$RELEASE_TITLE" \
             --target "$GITHUB_SHA" \
             --latest \
-            --notes "### Automated Debug APK Build
-- **Build Run:** #${GITHUB_RUN_NUMBER}
-- **Run Attempt:** #${GITHUB_RUN_ATTEMPT}
-- **Commit SHA:** \`${GITHUB_SHA}\`
-- **Notice:** This is an automatically generated debug APK built by GitHub Actions for testing purposes. It is signed with a temporary debug keystore and is not intended for Google Play Store production release."
+            --notes "Automated Debug APK Build #${GITHUB_RUN_NUMBER} for commit ${GITHUB_SHA}"
 
       - name: Report APK download result
         if: always()
